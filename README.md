@@ -15,4 +15,4 @@ This is the dashboard package scaffold. It does not yet implement the product sc
 
 The npm package name and environment variable names are working names and can be changed before the first public release.
 
-`app` is the routing/composition layer. A route delegates to one feature; features may depend on `entities` and `shared`, while `entities` and `shared` must not depend on feature modules.
+`app` is the routing/composition layer. A route delegates to one feature; features may depend on `entities` and `shared`. `entities` and `shared` stay feature-independent, and `shared` stays independent of product entities.
