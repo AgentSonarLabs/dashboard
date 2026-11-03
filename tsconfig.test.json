@@ -8,6 +8,6 @@
     "outDir": ".test-build",
     "rootDir": "src"
   },
-  "include": ["src/shared/api/client.ts", "src/shared/lib/format/**/*.ts"],
+  "include": ["src/shared/api/**/*.ts", "src/shared/lib/format/**/*.ts"],
   "exclude": ["node_modules", ".next", ".test-build"]
 }
