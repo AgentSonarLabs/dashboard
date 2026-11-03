@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+### Patch Changes
+
+- c9a6e72: Keep the dashboard version label in sync with the package release.
+
 ## 0.3.1
 
 ### Patch Changes
