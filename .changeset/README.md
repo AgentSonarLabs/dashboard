@@ -1,3 +1,3 @@
-# Release changesets
+# Release notes
 
-Add one changeset per user-visible change with `npx changeset`, choosing patch/minor/major according to SemVer. Run `npx changeset version` to update package versions and `CHANGELOG.md`. Review and commit the generated release files separately from implementation commits.
+Create a changeset for each user-visible dashboard change. The release workflow is intentionally manual until the repository has a configured package publisher.
