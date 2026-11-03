@@ -1,18 +1,37 @@
-# AI Agent Observability Dashboard
+# Agent Observability Dashboard
 
-Standalone Next.js dashboard repository for viewing agent telemetry collected by the self-hosted backend.
+Self-hosted web dashboard for agent runs, spans, logs, errors, and deterministic findings. The browser uses same-origin routes; server-side adapters communicate with the backend.
 
 ## Status
 
-This is the dashboard package scaffold. It does not yet implement the product screens. The workspace-level `specs/` documents define the intended behavior; the dashboard will consume the backend's versioned HTTP contract once that contract is established.
+Active development. The workspace-level [`specs/`](../specs/) tracks the intended contract; use only routes implemented in this repository.
 
-## Source layout
+## Run locally
 
-- `src/app`: Next.js routes and application shell.
-- `src/features`: screen-oriented product modules.
-- `src/entities/telemetry`: dashboard telemetry model and vocabulary.
-- `src/shared`: cross-feature API, config, formatting, UI, and hook utilities.
+Requires Node.js 22 or newer and npm.
 
-The npm package name and environment variable names are working names and can be changed before the first public release.
+```sh
+npm install
+npm run dev
+```
 
-`app` is the routing/composition layer. A route delegates to one feature; features may depend on `entities` and `shared`. `entities` and `shared` stay feature-independent, and `shared` stays independent of product entities.
+Set `AGENT_OBSERVABILITY_COLLECTOR_URL` when the backend is not at `http://127.0.0.1:4318`.
+
+## Architecture
+
+- `src/app/`: Next.js route composition and shell.
+- `src/features/`: user-facing workflows.
+- `src/entities/`: telemetry domain types and models.
+- `src/shared/`: API, config, formatting, and reusable UI.
+
+## Development
+
+```sh
+npm run format:check
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+See [CHANGELOG.md](CHANGELOG.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md). License: [MIT](LICENSE).
