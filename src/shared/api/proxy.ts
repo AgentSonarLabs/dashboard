@@ -11,6 +11,7 @@ export async function proxyApiRequest(
     const upstream = await fetcher(upstreamUrl, {
       headers: { accept: request.headers.get("accept") ?? "application/json" },
       cache: "no-store",
+      signal: request.signal,
     });
     const headers = new Headers();
     for (const name of ["content-type", "cache-control", "x-accel-buffering"]) {
@@ -24,6 +25,7 @@ export async function proxyApiRequest(
       headers,
     });
   } catch {
+    if (request.signal.aborted) return new Response(null, { status: 499 });
     return Response.json({ error: "backend is unavailable" }, { status: 502 });
   }
 }

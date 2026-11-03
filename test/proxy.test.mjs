@@ -58,3 +58,21 @@ test("API proxy reports backend connection failures", async () => {
   assert.equal(response.status, 502);
   assert.deepEqual(await response.json(), { error: "backend is unavailable" });
 });
+
+test("API proxy cancels upstream SSE when the dashboard request is aborted", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  let upstreamSignal;
+  const response = await proxyApiRequest(
+    new Request("http://dashboard.local/api/stream", { signal: controller.signal }),
+    ["stream"],
+    "http://backend.internal:4318",
+    async (_input, init) => {
+      upstreamSignal = init?.signal;
+      throw new DOMException("The request was aborted", "AbortError");
+    },
+  );
+
+  assert.equal(upstreamSignal?.aborted, true);
+  assert.equal(response.status, 499);
+});
