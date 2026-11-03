@@ -1,16 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import type { RunDetail } from "@/entities/telemetry/model";
 import { useResource } from "@/shared/hooks/use-resource";
 import { formatDuration } from "@/shared/lib/format/duration";
 import { formatCompactNumber, formatCurrency } from "@/shared/lib/format/number";
 import { formatTimestamp } from "@/shared/lib/format/timestamp";
+import { createTraceTimeline } from "@/shared/lib/trace-timeline";
 import { ResourceState } from "@/shared/ui/resource-state";
 import { FindingList, MetricCard, StatusBadge } from "@/shared/ui/telemetry-components";
 
 export function RunDetailPage({ runId }: { runId: string }) {
   const { data, error, loading } = useResource<RunDetail>(`/api/runs/${encodeURIComponent(runId)}`);
+  const [selectedSpanId, setSelectedSpanId] = useState("");
+  const timeline = useMemo(() => (data ? createTraceTimeline(data.spans, data.run) : null), [data]);
+  const selectedSpan =
+    data?.spans.find((span) => span.id === selectedSpanId) ?? timeline?.spans[0]?.span;
   return (
     <>
       <div className="page-heading">
@@ -48,36 +54,123 @@ export function RunDetailPage({ runId }: { runId: string }) {
                 accent="orange"
               />
               <MetricCard
-                label="Cost"
+                label="Reported cost"
                 value={formatCurrency(data.run.cost)}
-                detail="Reported by model spans"
+                detail="Cost attributes received from spans"
                 accent="green"
               />
             </div>
             <div className="content-grid">
-              <section className="panel panel-wide">
+              <section className="panel trace-panel">
                 <div className="panel-heading">
                   <div>
                     <h2>Trace timeline</h2>
-                    <p>{data.spans.length} spans in this run</p>
+                    <p>
+                      {data.spans.length} spans · {formatDuration(timeline?.duration)}
+                    </p>
                   </div>
                 </div>
-                {data.spans.length ? (
-                  <div className="span-list">
-                    {data.spans.map((span) => (
-                      <div className="span-row" key={span.id}>
-                        <span className={`span-type type-${span.type}`}>{span.type}</span>
-                        <div className="span-copy">
-                          <strong>{span.name}</strong>
-                          <small className="mono">{span.id}</small>
+                {timeline && timeline.spans.length ? (
+                  <div className="trace-layout">
+                    <div className="trace-list" aria-label="Span timeline">
+                      <div className="trace-axis">
+                        <span className="trace-axis-label">SPAN</span>
+                        <div className="trace-axis-scale" aria-hidden="true">
+                          <span>0 ms</span>
+                          <span>{formatDuration(timeline.duration * 0.25)}</span>
+                          <span>{formatDuration(timeline.duration * 0.5)}</span>
+                          <span>{formatDuration(timeline.duration * 0.75)}</span>
+                          <span>{formatDuration(timeline.duration)}</span>
                         </div>
-                        <StatusBadge status={span.status} />
-                        <span>{formatDuration(span.duration)}</span>
                       </div>
-                    ))}
+                      {timeline.spans.map(({ span, depth, leftPercent, widthPercent }) => (
+                        <div
+                          className={
+                            selectedSpan?.id === span.id ? "trace-row selected" : "trace-row"
+                          }
+                          key={span.id}
+                        >
+                          <div
+                            className="trace-name"
+                            style={{ paddingLeft: `${8 + depth * 12}px` }}
+                          >
+                            <button
+                              className="trace-name-button"
+                              type="button"
+                              onClick={() => setSelectedSpanId(span.id)}
+                              aria-pressed={selectedSpan?.id === span.id}
+                              aria-label={`Inspect ${span.type} span ${span.name}`}
+                            >
+                              <span className={`trace-kind type-${span.type}`}>{span.type}</span>
+                              <span>
+                                <span className="trace-title">{span.name}</span>
+                                <span className="trace-subtitle">{span.id.slice(0, 12)}</span>
+                              </span>
+                            </button>
+                            <span className="trace-duration">{formatDuration(span.duration)}</span>
+                          </div>
+                          <div className="trace-track">
+                            {[25, 50, 75].map((position) => (
+                              <span
+                                className="trace-gridline"
+                                key={position}
+                                style={{ left: `${position}%` }}
+                                aria-hidden="true"
+                              />
+                            ))}
+                            <button
+                              className={`trace-bar type-${span.type} status-${span.status}`}
+                              type="button"
+                              style={{ left: `${leftPercent}%`, width: `${widthPercent}%` }}
+                              title={`${span.name} · ${formatDuration(span.duration)}`}
+                              aria-label={`Select ${span.name}, ${formatDuration(span.duration)}`}
+                              aria-pressed={selectedSpan?.id === span.id}
+                              onClick={() => setSelectedSpanId(span.id)}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {selectedSpan ? (
+                      <aside className="trace-inspector" aria-live="polite">
+                        <h3>{selectedSpan.name}</h3>
+                        <div className="trace-inspector-meta">
+                          <span className={`trace-kind type-${selectedSpan.type}`}>
+                            {selectedSpan.type}
+                          </span>
+                          <StatusBadge status={selectedSpan.status} />
+                        </div>
+                        <dl>
+                          <div>
+                            <dt>Span ID</dt>
+                            <dd className="mono">{selectedSpan.id}</dd>
+                          </div>
+                          <div>
+                            <dt>Parent</dt>
+                            <dd className="mono">{selectedSpan.parentId ?? "Root span"}</dd>
+                          </div>
+                          <div>
+                            <dt>Started</dt>
+                            <dd>{formatTimestamp(selectedSpan.startedAt)}</dd>
+                          </div>
+                          <div>
+                            <dt>Duration</dt>
+                            <dd>{formatDuration(selectedSpan.duration)}</dd>
+                          </div>
+                        </dl>
+                        <div className="trace-attributes">
+                          <h4>Attributes</h4>
+                          <pre>
+                            {Object.keys(selectedSpan.metadata).length
+                              ? JSON.stringify(selectedSpan.metadata, null, 2)
+                              : "No attributes reported."}
+                          </pre>
+                        </div>
+                      </aside>
+                    ) : null}
                   </div>
                 ) : (
-                  <div className="quiet-empty">No spans in this run.</div>
+                  <div className="quiet-empty">No spans were reported for this run.</div>
                 )}
               </section>
               <section className="panel">

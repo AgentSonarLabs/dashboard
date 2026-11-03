@@ -8,6 +8,10 @@
     "outDir": ".test-build",
     "rootDir": "src"
   },
-  "include": ["src/shared/api/**/*.ts", "src/shared/lib/format/**/*.ts"],
+  "include": [
+    "src/shared/api/**/*.ts",
+    "src/shared/lib/format/**/*.ts",
+    "src/shared/lib/trace-timeline.ts"
+  ],
   "exclude": ["node_modules", ".next", ".test-build"]
 }
