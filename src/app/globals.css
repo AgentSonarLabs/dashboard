@@ -83,6 +83,11 @@ select:focus-visible {
 .brand-mark svg {
   width: 21px;
   height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .brand-copy,
 .sidebar-caption {
