@@ -8,4 +8,3 @@ export function formatDuration(milliseconds: number | null | undefined): string 
 
   return `${(value / 3_600_000).toFixed(1)} hr`;
 }
-

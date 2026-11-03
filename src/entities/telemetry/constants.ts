@@ -10,4 +10,3 @@ export const FINDING_TYPES = [
   "possible_loop",
 ] as const;
 export const FINDING_SEVERITIES = ["info", "warning", "critical"] as const;
-

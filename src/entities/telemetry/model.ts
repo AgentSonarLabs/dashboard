@@ -69,3 +69,60 @@ export interface Finding {
   message: string;
   createdAt: number;
 }
+
+export interface ErrorGroup {
+  signature: string;
+  type: string;
+  message: string;
+  count: number;
+  firstAt: number;
+  lastAt: number;
+  runIds: string[];
+}
+
+export interface RunDetail {
+  run: Run;
+  spans: Span[];
+  logs: LogEntry[];
+  errors: AgentError[];
+  findings: Finding[];
+}
+
+export interface OverviewMetrics {
+  runs: {
+    total: number;
+    running: number;
+    success: number;
+    error: number;
+    successRate: number | null;
+  };
+  duration: { avg: number | null; max: number | null };
+  tokens: { total: number | null; avg: number | null };
+  cost: { total: number | null };
+  calls: { llm: number; tool: number };
+  errors: { total: number };
+  findings: { total: number; critical: number; warning: number };
+}
+
+export interface OverviewResponse {
+  metrics: OverviewMetrics;
+  recentRuns: Run[];
+  activeRuns: Run[];
+  slowRuns: Run[];
+  recentFindings: Finding[];
+  topErrors: ErrorGroup[];
+}
+
+export interface EffectiveConfig {
+  endpoint: string;
+  collector: { host: string; port: number };
+  dashboard: { host: string; port: number };
+  database: { path: string };
+  detection: {
+    longRunningMs: number;
+    repeatedToolCount: number;
+    repeatedErrorCount: number;
+    noActivityMs: number;
+    loopRepeatCount: number;
+  };
+}

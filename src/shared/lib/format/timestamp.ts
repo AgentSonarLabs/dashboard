@@ -1,7 +1,4 @@
-export function formatTimestamp(
-  value: number | null | undefined,
-  locale = "vi-VN",
-): string {
+export function formatTimestamp(value: number | null | undefined, locale = "vi-VN"): string {
   if (value == null || !Number.isFinite(value)) return "—";
 
   const date = new Date(value);
@@ -12,4 +9,3 @@ export function formatTimestamp(
     timeStyle: "medium",
   }).format(date);
 }
-
