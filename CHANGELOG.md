@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4
+
+### Patch Changes
+
+- b7c4e5a: Upgrade Next.js and its image-processing dependencies to patched releases.
+
 ## 0.3.3
 
 ### Patch Changes
