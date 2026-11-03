@@ -5,7 +5,7 @@ import type {
   RUN_STATUSES,
   SPAN_STATUSES,
   SPAN_TYPES,
-} from "@/constants/telemetry";
+} from "./constants";
 
 export type RunStatus = (typeof RUN_STATUSES)[number];
 export type SpanType = (typeof SPAN_TYPES)[number];
@@ -69,4 +69,3 @@ export interface Finding {
   message: string;
   createdAt: number;
 }
-
