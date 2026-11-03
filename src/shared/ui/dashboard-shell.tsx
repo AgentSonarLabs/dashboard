@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
+import { version as appVersion } from "../../../package.json";
 
 const navigation = [
   { href: "/", label: "Overview", icon: "overview" },
@@ -95,7 +96,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             >
               <i /> LIVE
             </span>
-            <span className="version-label">v0.3.0</span>
+            <span className="version-label">v{appVersion}</span>
           </div>
         </header>
         <div className="page-content">{children}</div>
