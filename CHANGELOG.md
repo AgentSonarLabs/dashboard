@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+### Patch Changes
+
+- c38da3c: Render the product mark in the navigation rail.
+
 ## 0.3.0
 
 ### Minor Changes
