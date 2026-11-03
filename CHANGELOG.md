@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- ef5449f: Add an inspectable span timeline and refresh the dashboard with active and slow run views.
+
 ## 0.2.1
 
 ### Patch Changes
