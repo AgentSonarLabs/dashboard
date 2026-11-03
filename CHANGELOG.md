@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3
+
+### Patch Changes
+
+- d1ab27f: Cancel collector stream requests when a dashboard client disconnects.
+
 ## 0.3.2
 
 ### Patch Changes
