@@ -6,7 +6,7 @@ import { useResource } from "@/shared/hooks/use-resource";
 import { formatDuration } from "@/shared/lib/format/duration";
 import { formatCompactNumber, formatCurrency } from "@/shared/lib/format/number";
 import { ResourceState } from "@/shared/ui/resource-state";
-import { FindingList, MetricCard, RunTable } from "@/shared/ui/telemetry-components";
+import { FindingList, MetricCard, RunSignalList, RunTable } from "@/shared/ui/telemetry-components";
 
 export function OverviewPage() {
   const { data, error, loading, refresh } = useResource<OverviewResponse>("/api/overview");
@@ -21,7 +21,7 @@ export function OverviewPage() {
           <p className="page-description">Live health and usage across instrumented agent runs.</p>
         </div>
         <button className="button-secondary" onClick={refresh} type="button">
-          ↻ Refresh
+          Refresh data
         </button>
       </div>
       <ResourceState loading={loading} error={error}>
@@ -54,9 +54,9 @@ export function OverviewPage() {
                 accent="orange"
               />
               <MetricCard
-                label="Estimated cost"
+                label="Reported cost"
                 value={formatCurrency(metrics.cost.total)}
-                detail="Reported by model spans"
+                detail="Cost attributes received from spans"
                 accent="green"
               />
               <MetricCard
@@ -94,6 +94,28 @@ export function OverviewPage() {
                 ) : (
                   <div className="quiet-empty">Waiting for the first OTLP trace.</div>
                 )}
+              </section>
+              <section className="panel">
+                <div className="panel-heading">
+                  <div>
+                    <h2>Active runs</h2>
+                    <p>Executions still in progress</p>
+                  </div>
+                  <span className="heading-count">{data.activeRuns.length}</span>
+                </div>
+                <RunSignalList runs={data.activeRuns} empty="No runs are active." />
+              </section>
+              <section className="panel">
+                <div className="panel-heading">
+                  <div>
+                    <h2>Slowest runs</h2>
+                    <p>Longest observed executions</p>
+                  </div>
+                  <Link className="text-link" href="/runs">
+                    Browse runs →
+                  </Link>
+                </div>
+                <RunSignalList runs={data.slowRuns} empty="No completed run durations yet." />
               </section>
               <section className="panel">
                 <div className="panel-heading">

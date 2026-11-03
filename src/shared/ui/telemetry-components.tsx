@@ -63,6 +63,26 @@ export function RunTable({ runs }: { runs: Run[] }) {
   );
 }
 
+export function RunSignalList({ runs, empty }: { runs: Run[]; empty: string }) {
+  if (runs.length === 0) return <div className="quiet-empty">{empty}</div>;
+  return (
+    <div className="run-signals">
+      {runs.slice(0, 5).map((run) => (
+        <div className="run-signal" key={run.id}>
+          <Link href={`/runs/${encodeURIComponent(run.id)}`} title={run.agent}>
+            {run.agent}
+          </Link>
+          <StatusBadge status={run.status} />
+          <small>
+            <span className="mono">{run.id.slice(0, 10)}</span>
+            <span className="run-signal-time"> · {formatDuration(run.duration)}</span>
+          </small>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function StatusBadge({ status }: { status: string }) {
   return <span className={`status-badge status-${status}`}>{status}</span>;
 }
