@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix dashboard API proxy routing so run and log requests reach the backend and SSE updates stream correctly.
+
 ## 0.2.0
 
 ### Minor Changes
