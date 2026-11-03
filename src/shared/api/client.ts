@@ -22,17 +22,20 @@ export function createApiClient({ baseUrl, fetch: fetcher = fetch }: ApiClientOp
   const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
 
   return {
-    async get<T>(path, init = {}) {
+    async get<T>(path: string, init = {}) {
       const url = `${normalizedBaseUrl}/${path.replace(/^\/+/, "")}`;
       const response = await fetcher(url, { ...init, method: "GET" });
 
       if (!response.ok) {
         const body = await response.text().catch(() => "");
-        throw new ApiError(body || `Backend request failed with status ${response.status}`, response.status, url);
+        throw new ApiError(
+          body || `Backend request failed with status ${response.status}`,
+          response.status,
+          url,
+        );
       }
 
       return (await response.json()) as T;
     },
   };
 }
-

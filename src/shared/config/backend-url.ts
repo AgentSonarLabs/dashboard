@@ -6,4 +6,3 @@ export function resolveBackendUrl(
   const configured = environment.AGENT_OBSERVABILITY_BACKEND_URL?.trim();
   return (configured || DEFAULT_BACKEND_URL).replace(/\/+$/, "");
 }
-

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": false,
+    "incremental": false,
+    "outDir": ".test-build",
+    "rootDir": "src"
+  },
+  "include": ["src/shared/api/client.ts", "src/shared/lib/format/**/*.ts"],
+  "exclude": ["node_modules", ".next", ".test-build"]
+}
