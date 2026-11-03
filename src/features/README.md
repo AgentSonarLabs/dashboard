@@ -1,10 +1,11 @@
 # Feature modules
 
-Create screen-oriented modules here as the dashboard is implemented:
+Each feature owns its UI and feature-specific API/state. A feature may depend on `src/entities` and `src/shared`; it must not import another feature's private implementation.
 
 - `overview`: fleet and recent activity overview.
-- `runs`: run list, details, and span timeline.
+- `runs`: run list.
+- `run-detail`: one run and its span timeline.
 - `logs`: searchable agent logs.
-- `errors`: errors and finding review.
+- `errors`: error and finding review.
 - `settings`: local instance settings and connection details.
 

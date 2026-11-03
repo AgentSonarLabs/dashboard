@@ -9,10 +9,10 @@ This is the dashboard package scaffold. It does not yet implement the product sc
 ## Source layout
 
 - `src/app`: Next.js routes and application shell.
-- `src/components`: reusable dashboard UI.
 - `src/features`: screen-oriented product modules.
-- `src/hooks`: reusable React hooks.
 - `src/entities/telemetry`: dashboard telemetry model and vocabulary.
 - `src/shared`: cross-feature API, config, formatting, UI, and hook utilities.
 
 The npm package name and environment variable names are working names and can be changed before the first public release.
+
+`app` is the routing/composition layer. A route delegates to one feature; features may depend on `entities` and `shared`, while `entities` and `shared` must not depend on feature modules.
